@@ -1,17 +1,24 @@
 ---
-
+import Layout from "../layouts/Layout.astro";
+import App from "../components/react/App";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Invoice Tracker">
+  <div class="flex flex-col items-center w-full max-w-4xl mx-auto px-6 pb-20">
+    <header class="w-full pt-16 pb-10">
+      <h1 class="font-serif italic text-5xl text-stone-100 tracking-tight">
+        Invoices
+      </h1>
+      <p class="mt-2 text-sm text-stone-500 tracking-wide">
+        Track, send, and manage
+        <span class="text-stone-500/60">&mdash;</span>
+        <a
+          href="https://www.resend.com"
+          class="text-stone-500 hover:text-stone-300 transition-colors"
+          >powered by Resend</a
+        >
+      </p>
+    </header>
+    <App client:load />
+  </div>
+</Layout>
