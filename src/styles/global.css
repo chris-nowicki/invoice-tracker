@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Sora", sans-serif;
+  --font-serif: "Instrument Serif", serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  background-color: #0c0a09;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      ellipse 80% 50% at 50% -20%,
+      rgba(120, 100, 80, 0.06),
+      transparent
+    );
+}
+
+/* Warm date input styling */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.6) sepia(0.2);
+}
