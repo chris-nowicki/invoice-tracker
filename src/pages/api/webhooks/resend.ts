@@ -3,7 +3,13 @@ import { ConvexHttpClient } from "convex/browser";
 import { Resend } from "resend";
 import { Webhook } from "svix";
 import { api } from "../../../../convex/_generated/api";
-import { json } from "../../../lib/json";
+
+function json(data: unknown, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+}
 
 export const prerender = false;
 

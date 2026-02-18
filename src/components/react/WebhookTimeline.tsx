@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { actions } from "astro:actions";
 import type { WebhookEvent } from "../../types/types";
 
 const eventConfig: Record<string, { icon: string; color: string; bg: string }> =
@@ -73,17 +74,12 @@ export default function WebhookTimeline({
   async function handleCancelReminder() {
     setCancelling(true);
     try {
-      const res = await fetch("/api/invoices/cancel-reminder", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ invoiceId }),
+      const { error } = await actions.invoices.cancelReminder({
+        invoiceId,
       });
-      if (!res.ok) {
-        const data = await res.json();
-        console.error("Cancel reminder failed:", data.error);
+      if (error) {
+        console.error("Cancel reminder failed:", error.message);
       }
-    } catch (err) {
-      console.error("Cancel reminder error:", err);
     } finally {
       setCancelling(false);
     }

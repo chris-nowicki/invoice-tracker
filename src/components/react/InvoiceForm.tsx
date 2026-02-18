@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "convex/react";
+import { actions, isInputError } from "astro:actions";
 import { api } from "../../../convex/_generated/api";
 import type { Invoice } from "../../types/types";
 
@@ -9,7 +10,6 @@ interface InvoiceFormProps {
 }
 
 export default function InvoiceForm({ onClose, invoice }: InvoiceFormProps) {
-  const createInvoice = useMutation(api.invoices.create);
   const updateInvoice = useMutation(api.invoices.update);
   const isEditing = !!invoice;
 
@@ -23,36 +23,11 @@ export default function InvoiceForm({ onClose, invoice }: InvoiceFormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function validate(): Record<string, string> {
-    const errs: Record<string, string> = {};
-    if (!clientName.trim()) errs.clientName = "Client name is required";
-    if (!clientEmail.trim()) {
-      errs.clientEmail = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clientEmail)) {
-      errs.clientEmail = "Invalid email address";
-    }
-    if (!amount || Number(amount) <= 0) {
-      errs.amount = "Amount must be greater than 0";
-    }
-    if (!description.trim()) errs.description = "Description is required";
-    if (!dueDate) {
-      errs.dueDate = "Due date is required";
-    } else if (
-      !isEditing &&
-      new Date(dueDate + "T00:00:00") <= new Date()
-    ) {
-      errs.dueDate = "Due date must be in the future";
-    }
-    return errs;
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
-    const errs = validate();
-    setErrors(errs);
-    if (Object.keys(errs).length > 0) return;
-
+    setErrors({});
     setIsSubmitting(true);
+
     try {
       const fields = {
         clientName: clientName.trim(),
@@ -65,22 +40,21 @@ export default function InvoiceForm({ onClose, invoice }: InvoiceFormProps) {
       if (isEditing) {
         await updateInvoice({ id: invoice._id, ...fields });
       } else {
-        const newInvoiceId = await createInvoice(fields);
+        const { error } = await actions.invoices.createAndSend(fields);
 
-        try {
-          const response = await fetch("/api/invoices/send", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ invoiceId: newInvoiceId }),
-          });
-          if (!response.ok) {
-            console.error(
-              "Failed to send invoice email:",
-              await response.json(),
+        if (error) {
+          if (isInputError(error)) {
+            setErrors(
+              Object.fromEntries(
+                Object.entries(error.fields)
+                  .filter(([, msgs]) => msgs?.length)
+                  .map(([field, msgs]) => [field, msgs![0]]),
+              ),
             );
+          } else {
+            setErrors({ dueDate: error.message });
           }
-        } catch (sendErr) {
-          console.error("Network error sending invoice:", sendErr);
+          return;
         }
 
         setClientName("");
@@ -88,7 +62,6 @@ export default function InvoiceForm({ onClose, invoice }: InvoiceFormProps) {
         setAmount("");
         setDescription("");
         setDueDate("");
-        setErrors({});
       }
       onClose();
     } finally {

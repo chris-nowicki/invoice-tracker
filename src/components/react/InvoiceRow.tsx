@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
+import { actions } from "astro:actions";
 import { api } from "../../../convex/_generated/api";
 import type { Invoice } from "../../types/types";
 import StatusBadge from "./StatusBadge";
@@ -28,17 +29,12 @@ export default function InvoiceRow({ invoice, onEdit }: InvoiceRowProps) {
   async function handleTogglePaid() {
     setTogglingPaid(true);
     try {
-      const res = await fetch("/api/invoices/toggle-paid", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ invoiceId: invoice._id }),
+      const { error } = await actions.invoices.togglePaid({
+        invoiceId: invoice._id,
       });
-      if (!res.ok) {
-        const data = await res.json();
-        console.error("Toggle paid failed:", data.error);
+      if (error) {
+        console.error("Toggle paid failed:", error.message);
       }
-    } catch (err) {
-      console.error("Toggle paid error:", err);
     } finally {
       setTogglingPaid(false);
     }
