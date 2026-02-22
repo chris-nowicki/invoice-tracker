@@ -20,70 +20,96 @@ A full-stack invoice tracking app built to demonstrate Resend's transactional em
 - **jsPDF** — client-side PDF generation
 - **Tailwind CSS v4** — styling
 
-## Getting Started
-
-### Prerequisites
+## Prerequisites
 
 - Node.js 18+
-- pnpm
-- A [Convex](https://convex.dev) account (free tier works)
-- A [Resend](https://resend.com) account with a verified domain
+- pnpm (`npm install -g pnpm`)
+- **Convex account** — will provide `CONVEX_DEPLOYMENT` and `PUBLIC_CONVEX_URL` ([dashboard.convex.dev](https://dashboard.convex.dev))
+- **Resend account** — will provide `RESEND_API_KEY` and `RESEND_WEBHOOK_SECRET`; requires a verified sending domain ([resend.com](https://resend.com))
 
-### Setup
+## Environment Variables
 
-1. Clone the repo and install dependencies:
+Create a `.env` file in the project root with the following variables:
 
-   ```sh
-   git clone <repo-url>
-   cd invoice-app
-   pnpm install
-   ```
+```env
+# Convex — from dashboard.convex.dev → your project → Settings → URL & Deploy Key
+CONVEX_DEPLOYMENT=
+PUBLIC_CONVEX_URL=
+PUBLIC_CONVEX_SITE_URL=
 
-2. Copy `.env.example` to `.env` and fill in the values:
+# Resend — from resend.com/api-keys
+RESEND_API_KEY=
 
-   ```sh
-   cp .env.example .env
-   ```
+# Resend Webhooks — from resend.com/webhooks → select endpoint → Signing Secret
+RESEND_WEBHOOK_SECRET=
+```
 
-   | Variable | Where to find it |
-   | :--- | :--- |
-   | `CONVEX_DEPLOYMENT` | Convex dashboard → Settings |
-   | `PUBLIC_CONVEX_URL` | Convex dashboard → Settings |
-   | `PUBLIC_CONVEX_SITE_URL` | Convex dashboard → Settings |
-   | `RESEND_API_KEY` | Resend dashboard → Settings → API Keys |
-   | `RESEND_WEBHOOK_SECRET` | Resend dashboard → Webhooks → signing secret |
+## Setup
 
-3. Start the Convex dev server (syncs schema and functions):
+### Step 1: Clone & install
 
-   ```sh
-   npx convex dev
-   ```
+```sh
+git clone <repo-url>
+cd invoice-tracker
+pnpm install
+```
 
-4. In a separate terminal, start the Astro dev server:
+### Step 2: Convex
 
-   ```sh
-   pnpm dev
-   ```
+1. Create a project at [dashboard.convex.dev](https://dashboard.convex.dev)
+2. Go to **Settings → URL & Deploy Key**
+3. Copy **Deployment URL** → `PUBLIC_CONVEX_URL`
+4. Derive `PUBLIC_CONVEX_SITE_URL` by replacing `.cloud` with `.site` in the Deployment URL
+5. Copy **Deployment Name** → `CONVEX_DEPLOYMENT`
 
-   The app will be running at `http://localhost:4321`.
+### Step 3: Resend
 
-### Webhook Setup
+1. Go to [resend.com/api-keys](https://resend.com/api-keys) → **Create API Key**
+2. Copy the value → `RESEND_API_KEY`
+3. Verify a sending domain under the **Domains** tab in the Resend dashboard
+4. Update the `FROM_EMAIL` constant in `src/actions/index.ts` to use your verified domain
 
-1. In the Resend dashboard, go to **Webhooks** and create a new endpoint pointing to:
+### Step 4: Webhook setup
 
-   ```
-   https://<your-domain>/api/webhooks/resend
-   ```
+Choose the option that matches your environment.
 
-2. Subscribe to these events: `email.sent`, `email.delivered`, `email.opened`, `email.bounced`, `email.delivery_delayed`
+**Option A — Local development with ngrok**
 
-3. For local development, use a tunnel like [ngrok](https://ngrok.com) to expose localhost:
-
+1. Install [ngrok](https://ngrok.com) and run:
    ```sh
    ngrok http 4321
    ```
+2. Copy the forwarding URL (e.g. `https://abc123.ngrok-free.app`)
+3. In Resend, go to **Webhooks → Add Endpoint**
+4. Set the endpoint URL to:
+   ```
+   https://abc123.ngrok-free.app/api/webhooks/resend
+   ```
+5. Subscribe to all 5 events: `email.sent`, `email.delivered`, `email.opened`, `email.bounced`, `email.delivery_delayed`
+6. Click into the webhook → **Signing Secret** → copy value → `RESEND_WEBHOOK_SECRET`
 
-4. Copy the signing secret from the webhook details page into `RESEND_WEBHOOK_SECRET` in your `.env`
+**Option B — Deployed URL**
+
+1. Deploy the app (e.g. Vercel)
+2. In Resend, go to **Webhooks → Add Endpoint**
+3. Set the endpoint URL to:
+   ```
+   https://<your-domain>/api/webhooks/resend
+   ```
+4. Subscribe to all 5 events: `email.sent`, `email.delivered`, `email.opened`, `email.bounced`, `email.delivery_delayed`
+5. Click into the webhook → **Signing Secret** → copy value → `RESEND_WEBHOOK_SECRET`
+
+### Step 5: Run the app
+
+```sh
+# Terminal 1 — sync Convex schema and functions
+npx convex dev
+
+# Terminal 2 — start Astro dev server
+pnpm dev
+```
+
+App runs at `http://localhost:4321`.
 
 ## How Webhooks Work
 
@@ -93,11 +119,8 @@ When you send an email through Resend, it tracks the email's full lifecycle. As 
 
 ```
 src/
-  pages/api/
-    invoices/send.ts            — Send invoice email + schedule reminder
-    invoices/toggle-paid.ts     — Toggle paid status, cancel reminder if paid
-    invoices/cancel-reminder.ts — Cancel a scheduled reminder
-    webhooks/resend.ts          — Receive and process Resend webhook events
+  actions/index.ts              — Astro server actions (send invoice, toggle paid, cancel reminder)
+  pages/api/webhooks/resend.ts  — Webhook endpoint (signature verified via Svix)
   components/react/
     App.tsx                     — Convex provider setup
     InvoiceDashboard.tsx        — Main dashboard with filtering
@@ -109,7 +132,6 @@ src/
     emailTemplate.ts            — Invoice + reminder HTML email templates
     pdf.ts                      — PDF invoice generation
     formatCurrency.ts           — Shared currency formatter
-    json.ts                     — JSON response helper
 convex/
   schema.ts                     — Database schema (invoices, webhookEvents)
   invoices.ts                   — Invoice queries and mutations
