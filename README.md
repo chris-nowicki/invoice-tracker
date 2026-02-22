@@ -56,12 +56,14 @@ pnpm install
 
 ### Step 2: Convex
 
-1. Run the following to setup your convex account and project:
+2. Go to [https://www.convex.dev/](https://www.convex.dev/) and setup an account
+
+1. Back in the terminal run the following to setup your convex account and project:
 ```sh
 npx convex dev
 ```
 
-This will generate the env variables in `.env.local` and sync your schema's and functions to your convex project.
+You will be prompted to setup a new project and from there convex will autogenerate your `.env` variables in `.env.local`
 
 ### Step 3: Resend
 
