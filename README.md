@@ -74,8 +74,6 @@ You will be prompted to setup a new project and from there convex will autogener
 
 ### Step 4: Webhook setup
 
-**How Webhooks Work**
-
 When you send an email through Resend, it tracks the email's full lifecycle. As the email moves through states: sent, delivered, opened — Resend POSTs events to your webhook endpoint. This app verifies each webhook signature using Svix, maps the event to an invoice status, logs it to the database, and updates the UI in real time via Convex. This is what powers the event timeline visible in each invoice row.
 
 Choose the option that matches your environment:
