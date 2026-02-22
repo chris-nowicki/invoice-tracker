@@ -1,6 +1,8 @@
 # Invoice Tracker
 
-A full-stack invoice tracking app built to demonstrate Resend's transactional email capabilities — including sending, PDF attachments, scheduled reminders, webhook event tracking, and real-time status updates.
+A full-stack invoice tracking app built to demonstrate Resend's transactional email capabilities.  includes sending emails, PDF attachments, scheduled email reminders, webhook event tracking, and real-time status updates.
+
+![App Screenshot](./app-screenshot.png)
 
 ## Features
 
@@ -129,11 +131,17 @@ Choose the option that matches your environment:
 
 ### Step 5: Run the app
 
+- Ensure the convex schema and functions are synced
 ```sh
-# Terminal 1 — sync Convex schema and functions
 npx convex dev
+```
+- If you are running locally ensure ngrok is running.  If it isn't run and ensure the endpoint is updated in your resend webhook:
+```sh
+ ngrok http 4321
+```
 
-# Terminal 2 — start Astro dev server
+- In a new terminal window start your local dev environment:
+```sh
 pnpm dev
 ```
 
