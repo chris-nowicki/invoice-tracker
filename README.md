@@ -90,8 +90,9 @@ You will be prompted to setup a new project and from there convex will autogener
 
 ### Step 3: Resend
 
-1. Go to [resend.com/api-keys](https://resend.com/api-keys) → **Create API Key**
-2. Copy the value into your `.env.local` `RESEND_API_KEY` variable
+1. Ensure you have an account setup at [resend.com](https://www.resend.com)
+2. Go to [resend.com/api-keys](https://resend.com/api-keys) → **Create API Key**
+3. Copy the value into your `.env.local` `RESEND_API_KEY` variable
 11. Verify a sending domain under the **Domains** tab in the Resend dashboard
 12. Update the `FROM_EMAIL` constant in `src/actions/index.ts` to use your verified domain
 
