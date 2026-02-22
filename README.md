@@ -85,7 +85,7 @@ Choose the option that matches your environment:
    ngrok http 4321
    ```
 2. Copy the forwarding URL (e.g. `https://abc123.ngrok-free.app`)
-3. In Resend, go to **Webhooks → Add Endpoint**
+3. In Resend, go to **Webhooks → Add webhook**
 4. Set the endpoint URL to:
    ```
    https://abc123.ngrok-free.app/api/webhooks/resend
@@ -96,7 +96,7 @@ Choose the option that matches your environment:
 **Option B — Deployed URL**
 
 1. Deploy the app (e.g. Vercel)
-2. In Resend, go to **Webhooks → Add Endpoint**
+2. In Resend, go to **Webhooks → Add webhook**
 3. Set the endpoint URL to:
    ```
    https://<your-domain>/api/webhooks/resend
