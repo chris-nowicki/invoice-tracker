@@ -68,7 +68,7 @@ You will be prompted to setup a new project and from there convex will autogener
 ### Step 3: Resend
 
 1. Go to [resend.com/api-keys](https://resend.com/api-keys) → **Create API Key**
-2. Copy the value → `RESEND_API_KEY`
+2. Copy the value into your .env.local `RESEND_API_KEY` variable
 3. Verify a sending domain under the **Domains** tab in the Resend dashboard
 4. Update the `FROM_EMAIL` constant in `src/actions/index.ts` to use your verified domain
 
@@ -89,7 +89,7 @@ Choose the option that matches your environment.
    https://abc123.ngrok-free.app/api/webhooks/resend
    ```
 5. Subscribe to all 5 events: `email.sent`, `email.delivered`, `email.opened`, `email.bounced`, `email.delivery_delayed`
-6. Click into the webhook → **Signing Secret** → copy value → `RESEND_WEBHOOK_SECRET`
+6. Click into the webhook → **Signing Secret** → copy the value into your .envl.local `RESEND_WEBHOOK_SECRET` variable
 
 **Option B — Deployed URL**
 
