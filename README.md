@@ -29,7 +29,7 @@ A full-stack invoice tracking app built to demonstrate Resend's transactional em
 
 ## Environment Variables
 
-Create a `.env` file in the project root with the following variables:
+Create a `.env.local` file in the project root with the following variables:
 
 ```env
 # Convex — from dashboard.convex.dev → your project → Settings → URL & Deploy Key
