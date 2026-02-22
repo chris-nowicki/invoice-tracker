@@ -56,11 +56,12 @@ pnpm install
 
 ### Step 2: Convex
 
-1. Create a project at [dashboard.convex.dev](https://dashboard.convex.dev)
-2. Go to **Settings → URL & Deploy Key**
-3. Copy **Deployment URL** → `PUBLIC_CONVEX_URL`
-4. Derive `PUBLIC_CONVEX_SITE_URL` by replacing `.cloud` with `.site` in the Deployment URL
-5. Copy **Deployment Name** → `CONVEX_DEPLOYMENT`
+1. Run the following to setup your convex account and project:
+```sh
+npx convex dev
+```
+
+This will generate the env variables in `.env.local` and sync your schema's and functions to your convex project.
 
 ### Step 3: Resend
 
@@ -113,7 +114,7 @@ App runs at `http://localhost:4321`.
 
 ## How Webhooks Work
 
-When you send an email through Resend, it tracks the email's full lifecycle. As the email moves through states — sent, delivered, opened — Resend POSTs events to your webhook endpoint. This app verifies each webhook signature using Svix, maps the event to an invoice status, logs it to the database, and updates the UI in real time via Convex. This is what powers the event timeline visible in each invoice row.
+When you send an email through Resend, it tracks the email's full lifecycle. As the email moves through states: sent, delivered, opened — Resend POSTs events to your webhook endpoint. This app verifies each webhook signature using Svix, maps the event to an invoice status, logs it to the database, and updates the UI in real time via Convex. This is what powers the event timeline visible in each invoice row.
 
 ## Project Structure
 
