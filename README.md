@@ -20,6 +20,29 @@ A full-stack invoice tracking app built to demonstrate Resend's transactional em
 - **jsPDF** — client-side PDF generation
 - **Tailwind CSS v4** — styling
 
+## Project Structure
+
+```
+src/
+  actions/index.ts              — Astro server actions (send invoice, toggle paid, cancel reminder)
+  pages/api/webhooks/resend.ts  — Webhook endpoint (signature verified via Svix)
+  components/react/
+    App.tsx                     — Convex provider setup
+    InvoiceDashboard.tsx        — Main dashboard with filtering
+    InvoiceForm.tsx             — Create/edit invoice form
+    InvoiceRow.tsx              — Expandable invoice row with timeline
+    StatusBadge.tsx             — Invoice status badge
+    WebhookTimeline.tsx         — Visual event timeline
+  lib/
+    emailTemplate.ts            — Invoice + reminder HTML email templates
+    pdf.ts                      — PDF invoice generation
+    formatCurrency.ts           — Shared currency formatter
+convex/
+  schema.ts                     — Database schema (invoices, webhookEvents)
+  invoices.ts                   — Invoice queries and mutations
+  webhookEvents.ts              — Webhook event queries and mutations
+```
+
 ## Prerequisites
 
 - Node.js 18+
@@ -115,26 +138,3 @@ pnpm dev
 ```
 
 App runs at `http://localhost:4321`.
-
-## Project Structure
-
-```
-src/
-  actions/index.ts              — Astro server actions (send invoice, toggle paid, cancel reminder)
-  pages/api/webhooks/resend.ts  — Webhook endpoint (signature verified via Svix)
-  components/react/
-    App.tsx                     — Convex provider setup
-    InvoiceDashboard.tsx        — Main dashboard with filtering
-    InvoiceForm.tsx             — Create/edit invoice form
-    InvoiceRow.tsx              — Expandable invoice row with timeline
-    StatusBadge.tsx             — Invoice status badge
-    WebhookTimeline.tsx         — Visual event timeline
-  lib/
-    emailTemplate.ts            — Invoice + reminder HTML email templates
-    pdf.ts                      — PDF invoice generation
-    formatCurrency.ts           — Shared currency formatter
-convex/
-  schema.ts                     — Database schema (invoices, webhookEvents)
-  invoices.ts                   — Invoice queries and mutations
-  webhookEvents.ts              — Webhook event queries and mutations
-```
