@@ -1,6 +1,6 @@
 # Invoice Tracker
 
-A full-stack invoice tracking app built to demonstrate Resend's transactional email capabilities.  includes sending emails, PDF attachments, scheduled email reminders, webhook event tracking, and real-time status updates.
+A full-stack invoice tracking app built to demonstrate Resend's transactional email capabilities.  Includes sending emails, PDF attachments, scheduled email reminders, webhook event tracking, and real-time status updates.
 
 ![App Screenshot](./app-screenshot.png)
 
