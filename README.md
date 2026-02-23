@@ -127,7 +127,7 @@ Choose the option that matches your environment:
    https://<your-domain>/api/webhooks/resend
    ```
 4. Subscribe to all 5 events: `email.sent`, `email.delivered`, `email.opened`, `email.bounced`, `email.delivery_delayed`
-5. Click into the webhook → **Signing Secret** → copy value → `RESEND_WEBHOOK_SECRET`
+5. Click into the webhook → copy the signing secret into your `.env.local` `RESEND_WEBHOOK_SECRET` variable
 
 ### Step 5: Run the app
 
