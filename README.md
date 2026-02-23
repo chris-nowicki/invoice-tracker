@@ -87,7 +87,7 @@ pnpm install
 npx convex dev
 ```
 
-You will be prompted to setup a new project and from there convex will autogenerate your `.env` variables in `.env.local`
+You will be prompted to setup a new project and from there convex will autogenerate the convex `.env` variables in `.env.local`
 
 ### Step 3: Resend
 
@@ -131,16 +131,18 @@ Choose the option that matches your environment:
 
 ### Step 5: Run the app
 
-- Ensure the convex schema and functions are synced
+**Sync Convex** (you can close this once it's done syncing)
 ```sh
 npx convex dev
 ```
-- If you are running locally ensure ngrok is running.  If it isn't run and ensure the endpoint is updated in your resend webhook:
-```sh
- ngrok http 4321
-```
 
-- In a new terminal window start your local dev environment:
+**Start ngrok** (local development only, keep this running)
+```sh
+ngrok http 4321
+```
+If your ngrok URL changed since Step 4, update the webhook endpoint in Resend.
+
+**Start the dev server**
 ```sh
 pnpm dev
 ```
